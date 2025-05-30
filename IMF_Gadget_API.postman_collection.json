@@ -1,0 +1,266 @@
+{
+  "info": {
+    "name": "IMF Gadget API",
+    "description": "API for managing IMF gadgets with JWT authentication",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newagent\",\n  \"password\": \"password123\",\n  \"role\": \"agent\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "pm.collectionVariables.set('token', response.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login Agent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "pm.collectionVariables.set('token', response.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"agent007\",\n  \"password\": \"agent123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gadgets",
+      "item": [
+        {
+          "name": "Get All Gadgets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/gadgets",
+              "host": ["{{base_url}}"],
+              "path": ["gadgets"]
+            }
+          }
+        },
+        {
+          "name": "Get Gadgets by Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/gadgets?status=Available",
+              "host": ["{{base_url}}"],
+              "path": ["gadgets"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "Available",
+                  "description": "Filter by status: Available, Deployed, Destroyed, Decommissioned"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Gadget",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Underwater Breathing Device\",\n  \"description\": \"Compact device allowing underwater breathing for 30 minutes\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/gadgets",
+              "host": ["{{base_url}}"],
+              "path": ["gadgets"]
+            }
+          }
+        },
+        {
+          "name": "Update Gadget",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Gadget Name\",\n  \"description\": \"Updated description\",\n  \"status\": \"Deployed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/gadgets/:id",
+              "host": ["{{base_url}}"],
+              "path": ["gadgets", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "gadget-uuid-here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Decommission Gadget",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/gadgets/:id",
+              "host": ["{{base_url}}"],
+              "path": ["gadgets", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "gadget-uuid-here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Self-Destruct Gadget",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmationCode\": \"ABC123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/gadgets/:id/self-destruct",
+              "host": ["{{base_url}}"],
+              "path": ["gadgets", ":id", "self-destruct"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "gadget-uuid-here"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": [""]
+        }
+      }
+    }
+  ]
+}
